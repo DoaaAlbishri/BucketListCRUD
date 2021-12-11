@@ -41,9 +41,20 @@ class BucketListViewController: UITableViewController, TableViewControllerDelega
             CRUDItemController.indexPath = indexPath
         }
     }
-    
+ // use this when i didn't have accessory button
+    /*
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "editSegue", sender: indexPath)
+    }
+     */
+    // edit item
+    override func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        performSegue(withIdentifier: "editSegue", sender: indexPath)
+    }
+    // delete item
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        items.remove(at: indexPath.row)
+        tableView.reloadData()
     }
     
     func cancelItem(_ controller: CRUDTableViewController){
