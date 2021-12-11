@@ -1,0 +1,63 @@
+//
+//  ViewController.swift
+//  Bucket List CRUD
+//
+//  Created by admin on 11/12/2021.
+//
+
+import UIKit
+
+class BucketListViewController: UITableViewController, TableViewControllerDelegate {
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view.
+    }
+    var items = ["Sky diving", "Live in Hawaii"]
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return items.count
+    }
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        // dequeue the cell from our storyboard
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ListCell", for: indexPath)
+        // All UITableViewCell objects have a build in textLabel so set it to the model that is corresponding to the row in array
+        cell.textLabel?.text = items[indexPath.row]
+        // return cell so that Table View knows what to draw in each row
+        return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "addSegue"{
+        let nav = segue.destination as! UINavigationController
+        let CRUDItemController = nav.topViewController as! CRUDTableViewController
+        CRUDItemController.delegate = self
+        }else if segue.identifier == "editSegue"{
+            let nav = segue.destination as! UINavigationController
+            let CRUDItemController = nav.topViewController as! CRUDTableViewController
+            CRUDItemController.delegate = self
+            let indexPath = sender as! NSIndexPath
+            let item = items[indexPath.row]
+            CRUDItemController.item = item
+            CRUDItemController.indexPath = indexPath
+        }
+    }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "editSegue", sender: indexPath)
+    }
+    
+    func cancelItem(_ controller: CRUDTableViewController){
+        dismiss(animated: true, completion: nil)
+    }
+    func saveItem(by controller: CRUDTableViewController, with text:String , at indexPath:NSIndexPath?){
+        if let ip = indexPath {
+            items[ip.row] = text
+        }else{
+        items.append(text)
+        }
+        tableView.reloadData()
+        dismiss(animated: true, completion: nil)
+    }
+
+}
+
